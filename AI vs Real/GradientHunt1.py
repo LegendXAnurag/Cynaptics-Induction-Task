@@ -33,9 +33,9 @@ def extract_features(images):
         except Exception as e:
             print(f"Skipping file {image}: {e}")
     features = np.array(features)
-    features = features.reshape(features.shape[0], 224,224, 3)  # Reshape all images in one go
+    features = features.reshape(features.shape[0], 224,224, 3) 
     return features
-# /kaggle/input/dataset/Data/Train
+
 
 
 TRAIN_DIR = "/kaggle/input/dataset/Data/Train"
@@ -52,7 +52,7 @@ y_train = to_categorical(y_train, num_classes=2)
 
 import numpy as np
 
-# Assuming x_train and y_train are NumPy arrays
+
 indices = np.arange(len(x_train))
 np.random.shuffle(indices)
 
@@ -80,7 +80,7 @@ model.add(Dense(1024, activation='relu'))
 model.add(Dropout(0.4))
 model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.4))
-# model.add(Dense(2048, activation='relu'))
+
 model.add(Dense(2, activation='softmax'))
 
 adam = keras.optimizers.Adam(learning_rate=0.001,clipnorm=0.8)
@@ -92,40 +92,36 @@ import pandas as pd
 import numpy as np
 from keras.preprocessing.image import load_img
 
-# Example directory for test images
+
 TEST_DIR = "/kaggle/input/dataset/Data/Test"
 test_image_paths = [os.path.join(TEST_DIR, img) for img in os.listdir(TEST_DIR)]
 
-# Process test images
 def preprocess_test_images(image_paths):
     features = []
     ids = []
     for image_path in image_paths:
         try: 
             img = load_img(image_path, target_size=(224,224))
-            # img_array = np.array(img) / 255.0  # Normalize
+         
             features.append(img)
-            ids.append(os.path.basename(image_path))  # Save image IDs
+            ids.append(os.path.basename(image_path)) 
         except Exception as e:
             print(f"Skipping file {image_path}: {e}")
     return np.array(features), ids
 
 test_features, test_ids = preprocess_test_images(test_image_paths)
 
-# Make predictions
 predictions = model.predict(test_features/255.0)
 predicted_labels = np.argmax(predictions, axis=1)
 
-# Map numeric predictions back to class names
-class_names = le.classes_  # Assuming the LabelEncoder used in training is available
+class_names = le.classes_ 
 mapped_labels = [class_names[label] for label in predicted_labels]
 
-# Create a DataFrame for submission
+
 submission = pd.DataFrame({
-    "Id": [img.split('.')[0] for img in test_ids],  # Remove file extensions for IDs
+    "Id": [img.split('.')[0] for img in test_ids],
     "Label": mapped_labels
 })
 
-# Save to CSV
 submission.to_csv("submission.csv", index=False)
 print("Submission file saved as 'submission.csv'")
