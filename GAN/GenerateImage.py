@@ -14,9 +14,9 @@ latent_dim=128
 n_samples=49
 from tensorflow.keras.models import load_model
 
-#Change the model path correspondingly
-g_model = load_model(f'D:\dcgan\final\disc_Final-Epoch-199_.h5')
-d_model = load_model(f'D:\dcgan\final\gen_Final-Epoch-199_.h5')
+#Change the model path accordingly
+g_model = load_model(f'GAN\gen_Final-Epoch-199_.h5')
+d_model = load_model(f'GAN\disc_Final-Epoch-199_.h5')
 
 # The models are compiled again as a warning was showing that saved models wont run without compiling again. (optimizer states are not saved)
 g_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
